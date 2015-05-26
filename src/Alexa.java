@@ -22,6 +22,8 @@ public class Alexa extends Scrapper{
     public String collect()
     {
         WebElement el = this.driver.findElement(By.xpath("//*[@id=\"traffic-rank-content\"]/div/span[2]/div[1]/span/span/div/strong"));
+        this.driver.quit();
         return el.getText();
+
     }
 }
