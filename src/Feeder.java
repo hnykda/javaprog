@@ -30,14 +30,15 @@ public class Feeder {
     private HashMap<String, String> data;
     public URL url = null;
     private String maternalUrl;
-
+    private WebDriver driver;
     //feed.entries.forEach( (entry) -> System.out.println(entry.getLink()));
 
 
 
 
-    public Feeder(URL feedUrl) throws MalformedURLException {
+    public Feeder(URL feedUrl, WebDriver driver) throws MalformedURLException {
         this.url = feedUrl;
+        this.driver = driver;
     }
 
     private ArrayList<Integer> get_entry_content_info(String url) throws
@@ -197,14 +198,14 @@ public class Feeder {
     private String alexas_guess(String urlOfFirstEntry)
     {
         //driver must be choosed on my own...
-        WebDriver wdriver = new PhantomJSDriver();
-        wdriver.get( "http://www.alexa.com/" );
-        WebElement inputField = wdriver.findElement(By.xpath("//*[@id=\"alx-content\"]/div/div/span/form/input" ));
+
+        this.driver.get( "http://www.alexa.com/" );
+        WebElement inputField = this.driver.findElement(By.xpath("//*[@id=\"alx-content\"]/div/div/span/form/input" ));
         inputField.clear();
         inputField.sendKeys(urlOfFirstEntry);
         inputField.submit();
 
-        String text = wdriver.findElement(By.xpath("//*[@id=\"js-li-last\"]/span[1]/a")).getText();
+        String text = this.driver.findElement(By.xpath("//*[@id=\"js-li-last\"]/span[1]/a")).getText();
         return ("http://www." + text) ;
     }
 

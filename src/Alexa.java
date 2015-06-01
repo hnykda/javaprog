@@ -3,16 +3,17 @@
  */
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 
 public class Alexa extends Scrapper{
 
     public String url;
 
     public Alexa(String _maternalURL, String _baseURL,
-                 String _xpathOfInputField, String browser, String jsonName)
+                 String _xpathOfInputField, WebDriver driver, String jsonName)
     {
         super(_maternalURL, _baseURL,
-                _xpathOfInputField,  browser, jsonName);
+                _xpathOfInputField,  driver, jsonName);
     }
 
     @Override

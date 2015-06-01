@@ -4,6 +4,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.sun.syndication.io.FeedException;
 import org.bson.BasicBSONObject;
+import org.openqa.selenium.WebDriver;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,22 +21,22 @@ public class Collector {
     private HashMap<String, HashMap<String, String>> data;
     private String id = null;
     private String maternalUrl;
-    private String browser;
     private String outFile;
     private Boolean datab;
+    private WebDriver driver;
 
-    public Collector(String feedUrl, String browser, boolean datab, String outFile)
+    public Collector(String feedUrl, WebDriver driver, boolean datab, String outFile)
             throws IOException, FeedException {
 
         this.feedUrl = new URL(feedUrl);
-        this.browser = browser;
         this.outFile = outFile;
         this.datab = datab;
+        this.driver = driver;
 
     }
 
     private HashMap<String, HashMap<String,String>> collect_feed_info() throws IOException, FeedException {
-        Feeder feed = new Feeder(this.feedUrl);
+        Feeder feed = new Feeder(this.feedUrl, this.driver);
         feed.collect();
         this.maternalUrl = feed.getMaternalUrl();
         HashMap<String, HashMap<String, String>> res = new HashMap<>();
@@ -47,15 +48,15 @@ public class Collector {
     private HashMap<String, HashMap<String, String>> collect_maternal_info() throws IOException {
 
         Alexa alexa = new Alexa(this.maternalUrl, "http://www.alexa.com",
-                        "//*[@id=\"alx-content\"]/div/div/span/form/input", this.browser, "alexa");
+                        "//*[@id=\"alx-content\"]/div/div/span/form/input", this.driver, "alexa");
         alexa.collect();
 
         Urlm urlm = new Urlm(this.maternalUrl, "http://www.urlm.co",
-                "//*[@id=\"url\"]", this.browser, "urlm");
+                "//*[@id=\"url\"]", this.driver, "urlm");
         urlm.collect();
 
         Websout websout = new Websout(this.maternalUrl, "http://www.websiteoutlook.com/",
-                "//*[@id=\"header\"]/form/input[1]", this.browser, "websout");
+                "//*[@id=\"header\"]/form/input[1]", this.driver, "websout");
         websout.collect();
 
         HashMap<String, HashMap<String, String>> maternalInfo = new HashMap<>();
@@ -63,9 +64,9 @@ public class Collector {
         maternalInfo.put("urlm", urlm.getData());
         maternalInfo.put("websout", websout.getData());
 
-        alexa.quit();
-        urlm.quit();
-        websout.quit();
+        //alexa.quit();
+        //urlm.quit();
+        //websout.quit();
 
         return maternalInfo;
     }
@@ -139,4 +140,12 @@ public class Collector {
     public String getId() {
         return this.id;
     }
+
+    public void quit()
+    {
+        System.out.println("\nExiting...");
+        this.driver.quit();
+        System.exit(0);
+    }
+
 }
