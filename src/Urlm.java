@@ -4,11 +4,11 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
-public class Alexa extends Scrapper{
+public class Urlm extends Scrapper{
 
     public String url;
 
-    public Alexa(String _maternalURL, String _baseURL,
+    public Urlm(String _maternalURL, String _baseURL,
                  String _xpathOfInputField, String browser, String jsonName)
     {
         super(_maternalURL, _baseURL,
@@ -17,9 +17,10 @@ public class Alexa extends Scrapper{
 
     @Override
     boolean check_availability() throws NoSuchElementException {
-        String chck = this.driver.findElement(By.xpath("//*[@id=\"no-enough-data\"]/div/div/span[1]/span/strong" )).getText();
+        String chck = this.driver.findElement(
+                By.xpath("/html/body/div/div[2]/div/div/div/div/h3")).getText();
 
-        if ((chck.toLowerCase().contains("Sorry, we do not have data on this website".toLowerCase())))
+        if ((chck.toLowerCase().contains("We don't have enough data to rank this website.".toLowerCase())))
             return false;
         else
             return true;
