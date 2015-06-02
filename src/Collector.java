@@ -47,17 +47,19 @@ public class Collector {
 
     private HashMap<String, HashMap<String, String>> collect_maternal_info() throws IOException {
 
-        Alexa alexa = new Alexa(this.maternalUrl, "http://www.alexa.com",
-                "//*[@id=\"alx-content\"]/div/div/span/form/input", this.driver, "alexa");
-        alexa.collect();
+        Websout websout = new Websout(this.maternalUrl, "http://www.websiteoutlook.com/",
+                "//*[@id=\"analyse\"]/div/input", this.driver, "websout");
+        websout.collect();
+
 
         Urlm urlm = new Urlm(this.maternalUrl, "http://www.urlm.co",
                 "//*[@id=\"url\"]", this.driver, "urlm");
         urlm.collect();
 
-        Websout websout = new Websout(this.maternalUrl, "http://www.websiteoutlook.com/",
-                "//*[@id=\"header\"]/form/input[1]", this.driver, "websout");
-        websout.collect();
+
+        Alexa alexa = new Alexa(this.maternalUrl, "http://www.alexa.com",
+                "//*[@id=\"alx-content\"]/div/div/span/form/input", this.driver, "alexa");
+        alexa.collect();
 
         HashMap<String, HashMap<String, String>> maternalInfo = new HashMap<>();
         maternalInfo.put("alexa", alexa.getData());

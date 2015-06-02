@@ -6,6 +6,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
+/**
+ * Ted nefunguje korektne, neb se zmenil layout stranky a stare xpath tak nefunguji.
+ */
 public class Websout extends Scrapper {
 
     public String url;
