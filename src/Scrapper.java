@@ -1,28 +1,17 @@
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.NoSuchElementException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 
 abstract class Scrapper {
@@ -36,7 +25,6 @@ abstract class Scrapper {
                     String _xpathOfInputField, WebDriver driver, String jsonName) {
         this.baseURL = _baseURL;
         this.jsonName = jsonName;
-        //System.out.println(browser.equals("chromium"));
 
         this.driver = driver;
         this.driver.get(_baseURL);
@@ -47,50 +35,44 @@ abstract class Scrapper {
 
         try {
             if (!this.check_availability()) {
-                //this.driver.quit();
                 throw new RuntimeException("No data available for this webpage");
             }
-        }
-        catch (NoSuchElementException ex)
-        {
+        } catch (NoSuchElementException ex) {
             //System.out.println("Data are present...");
         }
 
     }
 
     private Map<String, String> loadJson() throws IOException {
-        //byte[] encoded = Files.readAllBytes(Paths.get());
 
         InputStream in = getClass().getResourceAsStream("/scraps.json");
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String jsonStringToBeRead = org.apache.commons.io.IOUtils.toString(reader);
         //String jsonStringToBeRead = new String(encoded, StandardCharsets.UTF_8);
 
-        Type mapOfStringObjectType = new TypeToken<Map<String, Map<String,String>>>() {}.getType();
+        Type mapOfStringObjectType = new TypeToken<Map<String, Map<String, String>>>() {
+        }.getType();
         Gson gson = new Gson();
-        Map<String, Map<String,String>> jsonOb = gson.fromJson(jsonStringToBeRead, mapOfStringObjectType);
+        Map<String, Map<String, String>> jsonOb = gson.fromJson(jsonStringToBeRead, mapOfStringObjectType);
 
         return (Map<String, String>) jsonOb.get(this.jsonName);
     }
 
     /**
      * This collect values from all values in given map
+     *
      * @param singles map in format NameOfTheFeature : xpathOfTheFeature
      * @return map in format NameOfTheFeature : collectedValueOfFeature
      */
-    private HashMap<String, String> _collect_singles(Map<String, String> singles)
-    {
+    private HashMap<String, String> _collect_singles(Map<String, String> singles) {
 
-        HashMap<String, String> res = new HashMap<>() ;
+        HashMap<String, String> res = new HashMap<>();
 
-        for (Map.Entry<String, String> entry : singles.entrySet())
-        {
+        for (Map.Entry<String, String> entry : singles.entrySet()) {
             try {
                 String val = this.driver.findElement(By.xpath(entry.getValue())).getText();
                 res.put(entry.getKey(), val);
-            }
-            catch (NoSuchElementException e)
-            {
+            } catch (NoSuchElementException e) {
                 res.put(entry.getKey(), null);
             }
         }
@@ -106,8 +88,7 @@ abstract class Scrapper {
         this.data = this._collect_singles(loaded);
     }
 
-    public HashMap<String, String> getData()
-    {
+    public HashMap<String, String> getData() {
         return this.data;
     }
 
@@ -115,6 +96,7 @@ abstract class Scrapper {
      * Checks if scrapper has information about given webpage.
      * Can legally throw NoSuchElementException if looking
      * for an element present only on page without information.
+     *
      * @return True if there is info about page, instead false
      */
     abstract boolean check_availability();
@@ -122,8 +104,7 @@ abstract class Scrapper {
     /**
      * Close the running driver
      */
-    public void quit()
-    {
+    public void quit() {
         this.driver.quit();
     }
 

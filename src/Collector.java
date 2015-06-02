@@ -35,7 +35,7 @@ public class Collector {
 
     }
 
-    private HashMap<String, HashMap<String,String>> collect_feed_info() throws IOException, FeedException {
+    private HashMap<String, HashMap<String, String>> collect_feed_info() throws IOException, FeedException {
         Feeder feed = new Feeder(this.feedUrl, this.driver);
         feed.collect();
         this.maternalUrl = feed.getMaternalUrl();
@@ -48,7 +48,7 @@ public class Collector {
     private HashMap<String, HashMap<String, String>> collect_maternal_info() throws IOException {
 
         Alexa alexa = new Alexa(this.maternalUrl, "http://www.alexa.com",
-                        "//*[@id=\"alx-content\"]/div/div/span/form/input", this.driver, "alexa");
+                "//*[@id=\"alx-content\"]/div/div/span/form/input", this.driver, "alexa");
         alexa.collect();
 
         Urlm urlm = new Urlm(this.maternalUrl, "http://www.urlm.co",
@@ -73,6 +73,7 @@ public class Collector {
 
     /**
      * Collects all together
+     *
      * @throws IOException
      */
     public void collect_all() throws IOException, FeedException {
@@ -90,8 +91,7 @@ public class Collector {
             System.out.println("\nSaved to database under id: " + id);
         }
         //System.out.println("\n\nShould i write? Huh: " + this.outFile);
-        if (this.outFile != null)
-        {
+        if (this.outFile != null) {
             BasicBSONObject jsonedData = new BasicBSONObject(this.data);
             FileWriter file = new FileWriter(this.outFile);
             try {
@@ -111,13 +111,13 @@ public class Collector {
 
     }
 
-    public HashMap<String, HashMap<String, String>> getData()
-    {
+    public HashMap<String, HashMap<String, String>> getData() {
         return this.data;
     }
 
     /**
      * Saves data to database
+     *
      * @return id of document in database
      */
     public String push_to_db() {
@@ -132,7 +132,7 @@ public class Collector {
         BasicDBObject ins = new BasicDBObject(this.data);
         coll.insert(ins);
 
-        this.id = ins.get( "_id" ).toString();
+        this.id = ins.get("_id").toString();
 
         return this.id;
     }
@@ -141,8 +141,7 @@ public class Collector {
         return this.id;
     }
 
-    public void quit()
-    {
+    public void quit() {
         System.out.println("\nExiting...");
         this.driver.quit();
         System.exit(0);

@@ -1,7 +1,6 @@
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
@@ -11,10 +10,8 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,9 +28,6 @@ public class Feeder {
     public URL url = null;
     private String maternalUrl;
     private WebDriver driver;
-    //feed.entries.forEach( (entry) -> System.out.println(entry.getLink()));
-
-
 
 
     public Feeder(URL feedUrl, WebDriver driver) throws MalformedURLException {
@@ -44,7 +38,6 @@ public class Feeder {
     private ArrayList<Integer> get_entry_content_info(String url) throws
             MalformedURLException, BoilerpipeProcessingException {
 
-        //HashMap<String, Integer> res = new HashMap<>();
         ArrayList<Integer> res = new ArrayList<>();
 
         String text = ArticleExtractor.INSTANCE.getText(new URL(url));
@@ -62,24 +55,24 @@ public class Feeder {
         int specialCharCount = 0;
 
         for (char c : text.toCharArray()) {
-            if (Character.isUpperCase(c)){ upperCase++; }
-            else if (Character.isLowerCase(c)){ lowerCase++; }
-            else if (Character.isDigit(c)){ numberCount++;}
-            else { specialCharCount++; }
+            if (Character.isUpperCase(c)) {
+                upperCase++;
+            } else if (Character.isLowerCase(c)) {
+                lowerCase++;
+            } else if (Character.isDigit(c)) {
+                numberCount++;
+            } else {
+                specialCharCount++;
+            }
         }
 
 
-        res.add(upperCase/nWords);
-        res.add(lowerCase/nWords);
-        res.add(numberCount/nWords);
-        res.add(specialCharCount/nWords);
+        res.add(upperCase / nWords);
+        res.add(lowerCase / nWords);
+        res.add(numberCount / nWords);
+        res.add(specialCharCount / nWords);
         res.add(nWords);
-/*
-        res.put("upper", upperCase/nWords) ;
-        res.put("lower", lowerCase/nWords);
-        res.put("numbers", numberCount/nWords);
-        res.put("special", specialCharCount/nWords);
-*/
+
         return res;
     }
 
@@ -87,18 +80,17 @@ public class Feeder {
             throws MalformedURLException, BoilerpipeProcessingException {
         HashMap<String, String> res = new HashMap<>();
 
-         List<String> title = new ArrayList<>();
-         List<String> uri = new ArrayList<>();
-         List<Date> publishedDate = new ArrayList<>();
-         List<String> author = new ArrayList<>();
-         List<List> categories = new ArrayList<>();
-         List<String> link = new ArrayList<>();
-         List<List> links = new ArrayList<>();
+        List<String> title = new ArrayList<>();
+        List<String> uri = new ArrayList<>();
+        List<Date> publishedDate = new ArrayList<>();
+        List<String> author = new ArrayList<>();
+        List<List> categories = new ArrayList<>();
+        List<String> link = new ArrayList<>();
+        List<List> links = new ArrayList<>();
 
         // we take maximally first 25 entries
         int n = entries.size();
-        if (n >= 25)
-        {
+        if (n >= 25) {
             n = 25;
         }
 
@@ -169,7 +161,7 @@ public class Feeder {
 
     public void collect() throws IOException, FeedException {
 
-        HashMap<String, String> res = new  HashMap<>() ;
+        HashMap<String, String> res = new HashMap<>();
         if (url == null) {
             throw new IllegalArgumentException("URI cannot be null");
         }
@@ -181,7 +173,7 @@ public class Feeder {
             res.put("language", feed.getLanguage());
             res.put("authors", feed.getAuthor());
             res.put("feedType", feed.getFeedType());
-            res.put("description",feed.getDescription());
+            res.put("description", feed.getDescription());
 
             HashMap<String, String> entries = this.get_entries_info(feed.getEntries());
 
@@ -195,34 +187,24 @@ public class Feeder {
         this.data = res;
     }
 
-    private String alexas_guess(String urlOfFirstEntry)
-    {
-        //driver must be choosed on my own...
+    private String alexas_guess(String urlOfFirstEntry) {
 
-        this.driver.get( "http://www.alexa.com/" );
-        WebElement inputField = this.driver.findElement(By.xpath("//*[@id=\"alx-content\"]/div/div/span/form/input" ));
+        this.driver.get("http://www.alexa.com/");
+        WebElement inputField = this.driver.findElement(By.xpath("//*[@id=\"alx-content\"]/div/div/span/form/input"));
         inputField.clear();
         inputField.sendKeys(urlOfFirstEntry);
         inputField.submit();
 
         String text = this.driver.findElement(By.xpath("//*[@id=\"js-li-last\"]/span[1]/a")).getText();
-        return ("http://www." + text) ;
+        return ("http://www." + text);
     }
 
-    public HashMap<String, String> getData()
-    {
+    public HashMap<String, String> getData() {
         return this.data;
     }
 
-    public String getMaternalUrl()
-    {
+    public String getMaternalUrl() {
         return this.maternalUrl;
     }
-/*
-    public HashMap<String, String> getData()
-    {
 
-        return res;
-    }
-    */
 }

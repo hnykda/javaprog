@@ -1,19 +1,19 @@
 /**
  * Created by dan on 5/26/15.
  */
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 
-public class Websout extends Scrapper{
+public class Websout extends Scrapper {
 
     public String url;
 
     public Websout(String _maternalURL, String _baseURL,
-                String _xpathOfInputField, WebDriver driver, String jsonName)
-    {
+                   String _xpathOfInputField, WebDriver driver, String jsonName) {
         super(_maternalURL, _baseURL,
-                _xpathOfInputField,  driver, jsonName);
+                _xpathOfInputField, driver, jsonName);
     }
 
     @Override

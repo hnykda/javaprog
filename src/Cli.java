@@ -1,8 +1,3 @@
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.syndication.io.FeedException;
 import org.apache.commons.cli.*;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +7,11 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Cli {
     private static final Logger log = Logger.getLogger(Cli.class.getName());
@@ -31,14 +31,12 @@ public class Cli {
         options.addOption("o", "out", true, "Specify if data should be saved to given file");
     }
 
-    private WebDriver inicialize_driver(String browser)
-    {
+    private WebDriver inicialize_driver(String browser) {
         WebDriver wdriver = null;
         if (browser.equals("phantomjs")) {
             System.out.println("\ntady:" + browser);
             wdriver = new PhantomJSDriver();
-        }
-        else if (browser.equals("phantomjsTOR")) {
+        } else if (browser.equals("phantomjsTOR")) {
             ArrayList<String> cliArgsCap = new ArrayList<>();
             cliArgsCap.add("--proxy=localhost:9050");
             cliArgsCap.add("--proxy-type=socks5");
@@ -46,15 +44,12 @@ public class Cli {
             capabilities.setCapability(
                     PhantomJSDriverService.PHANTOMJS_CLI_ARGS, cliArgsCap);
             wdriver = new PhantomJSDriver(capabilities);
-        }
-        else if (browser.equals("firefox")) {
+        } else if (browser.equals("firefox")) {
             wdriver = new FirefoxDriver();
-        }
-        else if (browser.equals("chromium")) {
+        } else if (browser.equals("chromium")) {
             //System.out.println("\ntady:" + browser);
             wdriver = new ChromeDriver();
-        }
-        else if (browser.equals("firefoxTOR")) {
+        } else if (browser.equals("firefoxTOR")) {
             FirefoxProfile profile = new FirefoxProfile();
             profile.setPreference("network.proxy.type", 1);
             profile.setPreference("network.proxy.socks", "localhost");
@@ -76,36 +71,29 @@ public class Cli {
             cmd = parser.parse(options, args);
 
 
-
             boolean datab;
-            if (cmd.hasOption("d"))
-            {
+            if (cmd.hasOption("d")) {
                 datab = true;
-            }
-            else
-            {
+            } else {
                 datab = false;
             }
 
             String brows;
             if (!cmd.hasOption("b")) {
                 brows = "phantomjs";
-            }
-            else {
+            } else {
                 brows = cmd.getOptionValue("b");
             }
 
-            WebDriver driver =  this.inicialize_driver(brows);
+            WebDriver driver = this.inicialize_driver(brows);
 
             String outFile;
             if (!cmd.hasOption("o")) {
                 outFile = null;
-            }
-            else {
+            } else {
                 outFile = cmd.getOptionValue("o");
             }
 
-            //System.out.println(cmd.hasOption("b") + cmd.getOptionValue("b") + " " + brows);
 
 
             if (cmd.hasOption("h"))
@@ -115,11 +103,10 @@ public class Cli {
 
                 Collector col = new Collector(cmd.getOptionValue("f"), driver, datab, outFile);
                 col.collect_all();
-                //System.out.println(col.getData());
                 col.quit();
             }
 
-            } catch (FeedException e1) {
+        } catch (FeedException e1) {
             e1.printStackTrace();
         } catch (ParseException e1) {
             e1.printStackTrace();
