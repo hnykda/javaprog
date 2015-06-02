@@ -1,4 +1,4 @@
-ejjednodušeji lze spustit program takto:
+Nejjednodušší způsob je zkompilovat zdrojové soubory do jar a pak lze spustit program takto:
 
 `java -jar scja.jar -f http://rss.cnn.com/rss/edition.rss`
 
