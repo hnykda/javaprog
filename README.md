@@ -2,8 +2,9 @@ ejjednodušeji lze spustit program takto:
 
 `java -jar scja.jar -f http://rss.cnn.com/rss/edition.rss`
 
-Jinak je možné vyvolat nápovědu pomocí `-h`
-java -jar scja.jar -h
+Jinak je možné vyvolat nápovědu pomocí `-h`:
+
+`java -jar scja.jar -h`
 
 Pokud běží databáze na localhost:27017, např. tímto příkazem:
 `mongod --bind_ip localhost --port 27017  --smallfiles --dbpath . --nojournal`
